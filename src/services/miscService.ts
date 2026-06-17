@@ -186,13 +186,14 @@ export const generateSitemap = async () => {
   const baseUrl = process.env.CLIENT_URL || 'https://example.com';
 
   const [products, blogs, categories, pages] = await Promise.all([
-    Product.find({ status: 'published' }).select('slug updatedAt'),
-    Blog.find({ status: 'published' }).select('slug updatedAt'),
-    Category.find({ isActive: true }).select('slug updatedAt'),
-    Page.find({ isPublished: true }).select('slug updatedAt'),
+    Product.find({ status: 'published' }).select('slug updatedAt').lean<{ slug: string; updatedAt?: Date }[]>(),
+    Blog.find({ status: 'published' }).select('slug updatedAt').lean<{ slug: string; updatedAt?: Date }[]>(),
+    Category.find({ isActive: true }).select('slug updatedAt').lean<{ slug: string; updatedAt?: Date }[]>(),
+    Page.find({ isPublished: true }).select('slug updatedAt').lean<{ slug: string; updatedAt?: Date }[]>(),
   ]);
 
-  const urls = [
+  type SitemapEntry = { loc: string; lastmod?: Date; priority?: string };
+  const urls: SitemapEntry[] = [
     { loc: baseUrl, priority: '1.0' },
     ...categories.map((c) => ({ loc: `${baseUrl}/categories/${c.slug}`, lastmod: c.updatedAt })),
     ...products.map((p) => ({ loc: `${baseUrl}/products/${p.slug}`, lastmod: p.updatedAt })),

@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { type SignOptions } from 'jsonwebtoken';
 import crypto from 'crypto';
 import Admin from '../models/Admin';
 import { ROLE_PERMISSIONS, ROLES } from '../constants';
@@ -11,10 +11,11 @@ export const generateToken = (admin: {
   role: string;
   permissions: string[];
 }) => {
+  const expiresIn = (process.env.JWT_EXPIRES_IN || '7d') as SignOptions['expiresIn'];
   return jwt.sign(
     { id: admin._id, email: admin.email, role: admin.role, permissions: admin.permissions },
     process.env.JWT_SECRET!,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    { expiresIn }
   );
 };
 

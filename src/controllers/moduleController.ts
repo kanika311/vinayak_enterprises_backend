@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
-import { asyncHandler, sendResponse } from '../utils/helpers';
+import { asyncHandler, sendResponse, getParam } from '../utils/helpers';
 import * as categoryService from '../services/categoryService';
 import * as leadService from '../services/leadService';
 import * as rfqService from '../services/rfqService';
@@ -20,12 +20,12 @@ export const createCategory = asyncHandler(async (req: AuthRequest, res: Respons
 });
 
 export const updateCategory = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const category = await categoryService.updateCategory(req.params.id, req.body);
+  const category = await categoryService.updateCategory(getParam(req.params.id), req.body);
   sendResponse(res, 200, category);
 });
 
 export const deleteCategory = asyncHandler(async (req: AuthRequest, res: Response) => {
-  await categoryService.deleteCategory(req.params.id);
+  await categoryService.deleteCategory(getParam(req.params.id));
   sendResponse(res, 200, null, 'Category deleted');
 });
 
@@ -41,17 +41,17 @@ export const createLead = asyncHandler(async (req: AuthRequest, res: Response) =
 });
 
 export const updateLead = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const lead = await leadService.updateLead(req.params.id, req.body, req.user?.id);
+  const lead = await leadService.updateLead(getParam(req.params.id), req.body, req.user?.id);
   sendResponse(res, 200, lead);
 });
 
 export const addLeadNote = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const lead = await leadService.addLeadNote(req.params.id, req.body.text, req.user!.id);
+  const lead = await leadService.addLeadNote(getParam(req.params.id), req.body.text, req.user!.id);
   sendResponse(res, 200, lead);
 });
 
 export const assignLead = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const lead = await leadService.assignLead(req.params.id, req.body.assignedTo, req.user!.id);
+  const lead = await leadService.assignLead(getParam(req.params.id), req.body.assignedTo, req.user!.id);
   sendResponse(res, 200, lead);
 });
 
@@ -67,7 +67,7 @@ export const createRFQ = asyncHandler(async (req: AuthRequest, res: Response) =>
 });
 
 export const updateRFQ = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const rfq = await rfqService.updateRFQ(req.params.id, req.body);
+  const rfq = await rfqService.updateRFQ(getParam(req.params.id), req.body);
   sendResponse(res, 200, rfq);
 });
 
@@ -83,7 +83,7 @@ export const getBlogs = asyncHandler(async (req: AuthRequest, res: Response) => 
 });
 
 export const getBlogBySlug = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const blog = await blogService.getBlogBySlug(req.params.slug);
+  const blog = await blogService.getBlogBySlug(getParam(req.params.slug));
   sendResponse(res, 200, blog);
 });
 
@@ -93,12 +93,12 @@ export const createBlog = asyncHandler(async (req: AuthRequest, res: Response) =
 });
 
 export const updateBlog = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const blog = await blogService.updateBlog(req.params.id, req.body);
+  const blog = await blogService.updateBlog(getParam(req.params.id), req.body);
   sendResponse(res, 200, blog);
 });
 
 export const deleteBlog = asyncHandler(async (req: AuthRequest, res: Response) => {
-  await blogService.deleteBlog(req.params.id);
+  await blogService.deleteBlog(getParam(req.params.id));
   sendResponse(res, 200, null, 'Blog deleted');
 });
 
@@ -114,12 +114,12 @@ export const createCatalogue = asyncHandler(async (req: AuthRequest, res: Respon
 });
 
 export const trackDownload = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const catalogue = await catalogueService.trackDownload(req.params.id, req.body);
+  const catalogue = await catalogueService.trackDownload(getParam(req.params.id), req.body);
   sendResponse(res, 200, catalogue);
 });
 
 export const deleteCatalogue = asyncHandler(async (req: AuthRequest, res: Response) => {
-  await catalogueService.deleteCatalogue(req.params.id);
+  await catalogueService.deleteCatalogue(getParam(req.params.id));
   sendResponse(res, 200, null, 'Catalogue deleted');
 });
 
@@ -135,12 +135,12 @@ export const createTestimonial = asyncHandler(async (req: AuthRequest, res: Resp
 });
 
 export const updateTestimonial = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const item = await miscService.updateTestimonial(req.params.id, req.body);
+  const item = await miscService.updateTestimonial(getParam(req.params.id), req.body);
   sendResponse(res, 200, item);
 });
 
 export const deleteTestimonial = asyncHandler(async (req: AuthRequest, res: Response) => {
-  await miscService.deleteTestimonial(req.params.id);
+  await miscService.deleteTestimonial(getParam(req.params.id));
   sendResponse(res, 200, null, 'Deleted');
 });
 
@@ -156,12 +156,12 @@ export const createCustomer = asyncHandler(async (req: AuthRequest, res: Respons
 });
 
 export const updateCustomer = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const item = await miscService.updateCustomer(req.params.id, req.body);
+  const item = await miscService.updateCustomer(getParam(req.params.id), req.body);
   sendResponse(res, 200, item);
 });
 
 export const deleteCustomer = asyncHandler(async (req: AuthRequest, res: Response) => {
-  await miscService.deleteCustomer(req.params.id);
+  await miscService.deleteCustomer(getParam(req.params.id));
   sendResponse(res, 200, null, 'Deleted');
 });
 
@@ -195,7 +195,7 @@ export const createInquiry = asyncHandler(async (req: AuthRequest, res: Response
 });
 
 export const updateInquiry = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const inquiry = await miscService.updateInquiry(req.params.id, req.body);
+  const inquiry = await miscService.updateInquiry(getParam(req.params.id), req.body);
   sendResponse(res, 200, inquiry);
 });
 
@@ -212,7 +212,7 @@ export const uploadMedia = asyncHandler(async (req: AuthRequest, res: Response) 
 });
 
 export const deleteMedia = asyncHandler(async (req: AuthRequest, res: Response) => {
-  await miscService.deleteMedia(req.params.id);
+  await miscService.deleteMedia(getParam(req.params.id));
   sendResponse(res, 200, null, 'Deleted');
 });
 
@@ -223,12 +223,12 @@ export const getPages = asyncHandler(async (_req: AuthRequest, res: Response) =>
 });
 
 export const getPageBySlug = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const page = await miscService.getPageBySlug(req.params.slug);
+  const page = await miscService.getPageBySlug(getParam(req.params.slug));
   sendResponse(res, 200, page);
 });
 
 export const upsertPage = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const page = await miscService.upsertPage(req.params.slug, req.body);
+  const page = await miscService.upsertPage(getParam(req.params.slug), req.body);
   sendResponse(res, 200, page);
 });
 
@@ -250,7 +250,7 @@ export const getSEOEntries = asyncHandler(async (_req: AuthRequest, res: Respons
 });
 
 export const upsertSEO = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const seo = await miscService.upsertSEO(req.params.path, req.body);
+  const seo = await miscService.upsertSEO(getParam(req.params.path), req.body);
   sendResponse(res, 200, seo);
 });
 

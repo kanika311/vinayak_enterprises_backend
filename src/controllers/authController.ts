@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middleware/auth';
-import { asyncHandler, sendResponse } from '../utils/helpers';
+import { asyncHandler, sendResponse, getParam } from '../utils/helpers';
 import * as authService from '../services/authService';
 import * as dashboardService from '../services/dashboardService';
 import Admin from '../models/Admin';
@@ -43,7 +43,7 @@ export const getAdmins = asyncHandler(async (_req: AuthRequest, res: Response) =
 });
 
 export const updateAdmin = asyncHandler(async (req: AuthRequest, res: Response) => {
-  const admin = await Admin.findByIdAndUpdate(req.params.id, req.body, { new: true }).select('-password');
+  const admin = await Admin.findByIdAndUpdate(getParam(req.params.id), req.body, { new: true }).select('-password');
   sendResponse(res, 200, admin);
 });
 
